@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sonda del navegador</title>
+<style>
+body{font-family:Helvetica,Arial,sans-serif;font-size:16px;margin:12px;background:#fff;color:#000}
+td{border:1px solid #000;padding:4px 8px;word-break:break-all}
+table{border-collapse:collapse;width:100%}
+#ruler{width:100px;height:10px;background:#000}
+</style>
+</head>
+<body>
+<h1>Sonda del navegador</h1>
+<p>User agent (servidor): {{.UA}}</p>
+<div id="ruler"></div>
+<table id="out"><tr><td>JavaScript</td><td>no se ejecutó</td></tr></table>
+<script>
+(function(){
+  var r=[];
+  function add(k,v){r.push([k,String(v)])}
+  function t(k,f){var v;try{v=f()}catch(e){v='ERROR '+e}add(k,v)}
+  var de=document.documentElement,st=document.createElement('div').style;
+  t('ua',function(){return navigator.userAgent});
+  t('inner',function(){return window.innerWidth+'x'+window.innerHeight});
+  t('client',function(){return de.clientWidth+'x'+de.clientHeight});
+  t('screen',function(){return screen.width+'x'+screen.height});
+  t('dpr',function(){return window.devicePixelRatio});
+  t('tzOffsetMin',function(){return new Date().getTimezoneOffset()});
+  t('flex',function(){return 'flex' in st||'webkitFlex' in st||'webkitBoxFlex' in st});
+  t('grid',function(){return 'grid' in st});
+  t('cssVars',function(){return !!(window.CSS&&CSS.supports&&CSS.supports('--a','0'))});
+  t('boxShadow',function(){return 'boxShadow' in st||'webkitBoxShadow' in st});
+  t('es6',function(){return eval('(()=>{let a=1;return a})()')===1});
+  t('fetch',function(){return typeof fetch});
+  t('xhr',function(){return typeof XMLHttpRequest});
+  t('localStorage',function(){localStorage.setItem('_t','1');return localStorage.getItem('_t')});
+  t('fontFace',function(){return typeof FontFace});
+  var h='',q=[],i;
+  for(i=0;i<r.length;i++){h+='<tr><td>'+r[i][0]+'</td><td>'+r[i][1].replace(/</g,'&lt;')+'</td></tr>';q.push(r[i][0]+'='+r[i][1])}
+  document.getElementById('out').innerHTML=h;
+  try{var x=new XMLHttpRequest();x.open('GET','/debug/report?d='+encodeURIComponent(q.join('; ')),true);x.send(null)}catch(e){}
+})();
+</script>
+</body>
+</html>

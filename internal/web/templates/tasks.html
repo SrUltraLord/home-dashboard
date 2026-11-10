@@ -1,0 +1,25 @@
+{{template "head" .}}
+<div class="slab tasks" id="slab">
+{{with .Tasks}}
+  <table class="t-head"><tr>
+    <td class="num">{{.Count}}</td>
+    <td class="meta">
+      <h2>{{.Title}}</h2>
+      <p>{{.Sub}}</p>
+    </td>
+    <td class="clock"><span id="clock">{{$.Clock}}</span><small>{{$.ClockSub}}</small></td>
+  </tr></table>
+
+  {{range .Groups}}
+  <div class="group{{if .Late}} late{{end}}">
+    <h3><span class="count">{{len .Items}}</span>{{.Title}}</h3>
+    <ul>
+      {{range .Items}}<li>{{if .When}}<span class="when">{{.When}}</span>{{end}}<i class="box"></i><span class="txt">{{.Title}}</span></li>{{end}}
+    </ul>
+  </div>
+  {{else}}
+  <p class="empty">No queda nada pendiente.</p>
+  {{end}}
+{{end}}
+</div>
+{{template "foot" .}}

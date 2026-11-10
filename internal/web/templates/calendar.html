@@ -1,0 +1,29 @@
+{{template "head" .}}
+<div class="slab" id="slab">
+{{with .Cal}}
+  <table class="strip"><tr>
+    <td class="num">{{.SelNum}}</td>
+    <td class="info">
+      <b>{{.SelLabel}}</b>
+      {{if .SelEvents}}{{range .SelEvents}}<span>{{.}}</span>{{end}}{{else}}<span>Sin eventos</span>{{end}}
+    </td>
+    <td class="clock"><span id="clock">{{$.Clock}}</span><small>{{$.ClockSub}}</small></td>
+  </tr></table>
+
+  <table class="cal-head"><tr>
+    <td class="title"><h1>{{.MonthTitle}}<small>{{.Year}}</small></h1></td>
+    <td class="arrow"><a href="/?m={{.PrevMonth}}&amp;d={{.Selected}}" title="Mes anterior">&lsaquo;</a></td>
+    <td class="arrow"><a href="/?m={{.NextMonth}}&amp;d={{.Selected}}" title="Mes siguiente">&rsaquo;</a></td>
+  </tr></table>
+
+  <table class="grid" id="grid">
+    <thead><tr><th>lu</th><th>ma</th><th>mi</th><th>ju</th><th>vi</th><th class="we">sá</th><th class="we">do</th></tr></thead>
+    <tbody>
+    {{range .Weeks}}<tr>
+      {{range .}}<td class="{{if .Out}}out {{end}}{{if .Today}}today {{end}}{{if .Selected}}sel{{end}}"><a class="day" href="/?d={{.Date}}"><span class="n">{{.Day}}</span><span class="marks">{{range .Events}}<i class="ev"></i>{{end}}{{if .Pending}}<i class="pend"></i>{{end}}</span></a></td>{{end}}
+    </tr>{{end}}
+    </tbody>
+  </table>
+{{end}}
+</div>
+{{template "foot" .}}

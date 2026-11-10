@@ -1,0 +1,24 @@
+{{define "head"}}<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Agenda</title>
+<link rel="stylesheet" href="/static/app.css">
+</head>
+<body>
+<div class="app" id="app" data-now="{{.NowMs}}" data-version="{{.Version}}" data-kiosk="{{.Kiosk}}">
+{{end}}
+
+{{define "foot"}}
+<table class="nav"><tr>
+  <td><a class="tab{{if eq .Tab "cal"}} on{{end}}" href="/">Calendario</a></td>
+  <td><a class="tab{{if eq .Tab "tasks"}} on{{end}}" href="/tasks">Pendientes <span class="badge">{{.Pending}}</span></a></td>
+  <td class="narrow"><a class="tab" href="{{.Self}}">Refrescar</a></td>
+  <td class="exit"><a class="tab" href="#exit">Salir</a></td>
+</tr></table>
+</div>
+<script src="/static/app.js"></script>
+</body>
+</html>
+{{end}}

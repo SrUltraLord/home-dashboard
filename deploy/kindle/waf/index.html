@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Dashboard</title>
+<style>
+html,body{margin:0;padding:0;height:100%;overflow:hidden;background:#fff}
+iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:0;display:block}
+#msg{position:absolute;left:0;right:0;top:40%;text-align:center;font:bold 22px Helvetica,Arial,sans-serif;z-index:2}
+#msg a{display:inline-block;margin-top:24px;padding:10px 18px;border:3px solid #000;color:#000;text-decoration:none}
+</style>
+</head>
+<body>
+<iframe id="f"></iframe>
+<div id="msg">Conectando con el dashboard…<br><a href="#" id="out">Salir</a></div>
+<script>
+/* Envoltorio local: siempre carga (es un archivo del Kindle) y reintenta el
+   dashboard remoto hasta que responde. ES5: el motor es un WebKit antiguo. */
+(function () {
+  var URL = 'http://192.168.100.244:8080/';
+  var f = document.getElementById('f'), msg = document.getElementById('msg');
+  var last = 0; // último latido recibido del dashboard
+
+  function exit() {
+    try { kindle.appmgr.start('app://com.lab126.booklet.home'); }
+    catch (e) { try { kindle.appmgr.back(); } catch (e2) {} }
+  }
+  function load() {
+    f.src = 'about:blank';
+    setTimeout(function () { f.src = URL; }, 300);
+  }
+  window.addEventListener('message', function (ev) {
+    if (ev.data === 'dashboard-ready') { last = new Date().getTime(); msg.style.display = 'none'; }
+    if (ev.data === 'dashboard-exit') { exit(); }
+  }, false);
+  document.getElementById('out').onclick = function () { exit(); return false; };
+
+  // Sin latido en 10 s tras cargar, o en 5 min después: reintentar.
+  setInterval(function () {
+    var silent = new Date().getTime() - last;
+    if (last === 0 || silent > 5 * 60000) {
+      if (last !== 0) { last = 0; msg.style.display = 'block'; }
+      load();
+    }
+  }, 10000);
+  load();
+})();
+</script>
+</body>
+</html>

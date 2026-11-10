@@ -1,0 +1,18 @@
+[Unit]
+Description=Home dashboard (agenda eInk para el Kindle)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+# Opcional: DASHBOARD_FLAGS=--demo mientras no haya credenciales de Google.
+EnvironmentFile=-%h/.config/home-dashboard/env
+ExecStart=%h/.local/bin/dashboard serve --addr :8080 $DASHBOARD_FLAGS
+# El journal de usuario no es legible sin privilegios en esta Raspberry.
+StandardOutput=append:%h/.local/state/home-dashboard/dashboard.log
+StandardError=append:%h/.local/state/home-dashboard/dashboard.log
+Restart=always
+RestartSec=5
+NoNewPrivileges=true
+
+[Install]
+WantedBy=default.target
